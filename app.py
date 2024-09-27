@@ -1,18 +1,31 @@
 import streamlit as st
 from transformers import pipeline
 
-# Specify the model you want to use
-model_name = "sshleifer/distilbart-cnn-12-6"  # or any other suitable model
-summarizer = pipeline("summarization", model=model_name)
+# Initialize the summarizer
+summarizer = pipeline("summarization")
 
+# Streamlit app
 st.title("Article Summarizer")
 
-article = st.text_area("Enter the article text here:")
+# Input text area for article
+article = st.text_area("Paste your article here:", height=300)
 
-if st.button("Summarize"):
+# Input fields for summary length
+max_length = st.number_input("Maximum length of summary:", min_value=10, max_value=500, value=130)
+min_length = st.number_input("Minimum length of summary:", min_value=10, max_value=500, value=30)
+
+# Button to generate summary
+if st.button("Generate Summary"):
     if article:
-        summary = summarizer(article, max_length=130, min_length=30, do_sample=False)
-        st.write("**Summary:**")
-        st.write(summary[0]['summary_text'])
+        with st.spinner("Generating summary..."):
+            summary = summarizer(article, max_length=max_length, min_length=min_length, do_sample=False)
+            st.success("Summary generated!")
+            st.write("### Summary:")
+            st.write(summary[0]['summary_text'])
     else:
-        st.warning("Please enter some text to summarize.")
+        st.error("Please enter an article to summarize.")
+
+# Show the article word count
+if article:
+    word_count = len(article.split())
+    st.write(f"The article has {word_count} words.")
