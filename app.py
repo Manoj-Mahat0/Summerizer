@@ -14,6 +14,8 @@ article = st.text_area("Paste your article here:", height=300)
 max_length = st.number_input("Maximum length of summary:", min_value=10, max_value=500, value=130)
 min_length = st.number_input("Minimum length of summary:", min_value=10, max_value=500, value=30)
 
+
+
 # Button to generate summary
 if st.button("Generate Summary"):
     if article:
